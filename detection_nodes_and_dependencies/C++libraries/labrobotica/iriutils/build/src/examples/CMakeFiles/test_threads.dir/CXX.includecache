@@ -1,0 +1,46 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/exceptions/exceptions.h
+exception
+-
+sstream
+-
+string
+-
+
+../include/mutex/mutex.h
+pthread.h
+-
+
+../include/threads/thread.h
+mutex.h
+../include/threads/mutex.h
+string
+-
+pthread.h
+-
+
+../include/threads/threadexceptions.h
+exceptions.h
+../include/threads/exceptions.h
+string
+-
+
+/home/noetic/ros_ws/src/labrobotica/iriutils/src/examples/test_threads.cpp
+thread.h
+/home/noetic/ros_ws/src/labrobotica/iriutils/src/examples/thread.h
+threadexceptions.h
+/home/noetic/ros_ws/src/labrobotica/iriutils/src/examples/threadexceptions.h
+stdio.h
+-
+unistd.h
+-
+iostream
+-
+

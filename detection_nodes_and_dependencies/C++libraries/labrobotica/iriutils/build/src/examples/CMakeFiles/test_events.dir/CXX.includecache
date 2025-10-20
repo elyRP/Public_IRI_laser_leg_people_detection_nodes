@@ -1,0 +1,42 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/events/event.h
+mutex.h
+../include/events/mutex.h
+string
+-
+
+../include/events/eventexceptions.h
+exceptions.h
+../include/events/exceptions.h
+
+../include/exceptions/exceptions.h
+exception
+-
+sstream
+-
+string
+-
+
+../include/mutex/mutex.h
+pthread.h
+-
+
+/home/noetic/ros_ws/src/labrobotica/iriutils/src/examples/test_events.cpp
+eventexceptions.h
+/home/noetic/ros_ws/src/labrobotica/iriutils/src/examples/eventexceptions.h
+event.h
+/home/noetic/ros_ws/src/labrobotica/iriutils/src/examples/event.h
+stdio.h
+-
+unistd.h
+-
+iostream
+-
+

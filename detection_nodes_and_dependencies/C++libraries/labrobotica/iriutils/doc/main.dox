@@ -1,0 +1,179 @@
+/*! \mainpage General IRI utilities
+
+  \section Introduction
+
+  This set of tools provide basic functionalities that are generally needed in many
+  applications. These utilities include mutual exclusion objects, exceptions, threads,
+  logic events and also generic communication devices. Next, a brief description of
+  each one is provided.
+
+  \subsection Mutex
+
+  Basic mutual exclusion object interface to handle multiple threads to access the
+  same shared resources. There exist no example of use of mutexes, but they are used
+  in most of the other utilities, so check them for examples of use.
+
+  \subsection Exceptions
+
+  Generic exceptions to be used as a base for all other exceptions. It provides some
+  basic error message handling, and each inherited exception may add as much
+  information as needed. There is no examples of use of exceptions, but it is used
+  in most of other utilities, so check them for examples of use.
+
+  \subsection threads Threadserver and Threads
+
+  This utility provides a simple and easy to use interface to threads, isolating the
+  low level details from the end user. The threads may be used direcltly or else
+  through a thread server which allows to create and handle as many threads as
+  neceessary without direct access to the threads themselves. In this case, each
+  thread is assigned a unique identifier which is used to identify it in the
+  server.
+
+  There exist examples of both threads being used directly (test_threads) and also
+  threads being used through the thread server (test_threadserver). These examples
+  provide the necessary information to easily set up an application with multiple
+  threads.
+
+  \subsection events Eventserver and Events
+
+  This utility provides a simple and easy way to use asynchronous notifications
+  between threads, allowing them to wait on several heterogeneous conditions without
+  wasting CPU time. The events may be used directly or else through an event server,
+  which allows to create and handle as many events as needed. In this case each event
+  is assigned a unique identifier which is used to identify it in the server.
+
+  There exist examples of both events being used directly (test_events) and also
+  events being used through the event server (test_eventserver). These examples
+  provide the necessary information to easily set up an application with multiple
+  events.
+
+  There exist also an other example that uses both events and threads using their
+  servers (test_bothservers), which gives a good example on how to use them
+  together.
+
+  \subsection log Log
+
+  This utility provides a simple way to log information into files. Each object is
+  associated to single file, and all the logged messages include a time stamp of
+  the log time.
+
+  \subsection time Time
+
+  This utility provides a simple and easy way to use time. Each CTime object has
+  got a time and using the class members and operations it is possible to get
+  time in seconds, milliseconds or C/system types such as timespec, or time_t;
+  set a time, sum, difference or average times, do time comparisions or print
+  time in human readable format.
+
+  There exist an example which uses all of class methods. Also in a bad use
+  which reach to an exception.
+
+  \section Installation
+
+  \subsection Pre-Requisites
+
+  This package requires of the following libraries and packages
+	 - <A href="http://www.cmake.org">cmake</A>, a cross-platform build system.
+	 - <A href="http://www.doxygen.org">doxygen</a> and
+	   <A href="http://www.graphviz.org">graphviz</a> to generate the documentation.
+         - stdc++,
+         - pthread, the POSIX thread library.
+	 .
+
+  Under linux all of these utilities are available in ready-to-use packages.
+
+  Under MacOS most of the packages are available via <a href="http://www.finkproject.org/">fink</a>. <br>
+
+  \subsection Compilation
+
+  Just download this package, uncompress it, and execute
+   - cd build
+   - cmake ..
+   .
+  to generate the makefile and then
+   - make
+   .
+  to obtain the shared library (in this case called <em>iriutils.so</em>) and
+  also all the example programs.
+
+  The <em>cmake</em> only need to be executed once (make will automatically call
+  <em>cmake</em> if you modify one of the <em>CMakeList.txt</em> files).
+
+  To generate this documentation type
+       - make doc
+       .
+
+  The files in the <em>build</em> directory are genetated by <em>cmake</em>
+  and <em>make</em> and can be safely removed.
+  After doing so you will need to call cmake manually again.
+
+  \subsection Configuration
+
+  The default build mode is DEBUG. That is, objects and executables
+  include debug information.
+
+  The RELEASE build mode optimizes for speed. To build in this mode
+  execute
+      - cmake .. -DCMAKE_BUILD_TYPE=RELEASE
+      .
+  The release mode will be kept until next time cmake is executed.
+
+  \subsection Installation
+
+  In order to be able to use the library, it it necessary to copy it into the system.
+  To do that, execute
+
+      - make install
+      .
+
+  as root and the shared libraries will be copied to <em>/usr/local/lib/iridrivers</em> directory
+  and the header files will be copied to <em>/usr/local/include/iridrivers</em> dierctory. At
+  this point, the library may be used by any user.
+
+  To remove the library from the system, exceute
+      - make uninstall
+      .
+  as root, and all the associated files will be removed from the system.
+
+  \section Customization
+
+  To build a new application using these library, first it is necessary to locate if the library
+  has been installed or not using the following command
+
+      - FIND_PACKAGE(iriutils)
+
+  In the case that the package is present, it is necessary to add the header files directory to
+  the include directory path by using
+
+      - INCLUDE_DIRECTORIES(${iriutils_INCLUDE_DIR})
+
+  Finally, it is also nevessary to link with the desired libraries by using the following command
+
+      - TARGET_LINK_LIBRARIES(&lt;executable name> ${iriutils_LIBRARY})
+      .
+
+  All these steps are automatically done when the new project is created following the instructions
+  in <A href="http://wikiri.upc.es/index.php/Create_a_new_development_project">here</a>
+
+  \section License
+
+  This package is licensed under a
+  <a href="http://www.gnu.org/licenses/lgpl.html">
+    LGPL 3.0 License</a>.
+
+  \section Disclaimer
+
+   This is free software: you can redistribute it and/or modify
+   it under the terms of the GNU Lesser General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+ */

@@ -1,0 +1,1 @@
+/usr/bin/c++  -g -Wall -D_REENTRANT -O0 --coverage -fprofile-arcs  -rdynamic CMakeFiles/test_logs.dir/test_logs.o  -o ../../../bin/test_logs  -Wl,-rpath,/home/noetic/ros_ws/src/labrobotica/iriutils/lib ../../../lib/libiriutils.so -lpthread -lrt 

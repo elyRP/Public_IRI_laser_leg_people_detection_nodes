@@ -1,0 +1,17 @@
+ #!/bin/bash
+  set -e
+  case "$1" in
+    configure)
+      #echo "I'm a postinst script"
+    ;;
+    abort-upgrade)
+
+    ;;
+    abort-remove)
+
+    ;;
+    abort-deconfigure)
+
+    ;;
+  esac
+  exit 0

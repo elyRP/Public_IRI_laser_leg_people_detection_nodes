@@ -1,0 +1,15 @@
+/usr/local/lib/iri/iriutils/libiriutils.so
+/usr/local/include/iri/iriutils/exceptions.h
+/usr/local/include/iri/iriutils/mutex.h
+/usr/local/include/iri/iriutils/mutexexceptions.h
+/usr/local/include/iri/iriutils/event.h
+/usr/local/include/iri/iriutils/eventserver.h
+/usr/local/include/iri/iriutils/eventexceptions.h
+/usr/local/include/iri/iriutils/thread.h
+/usr/local/include/iri/iriutils/threadserver.h
+/usr/local/include/iri/iriutils/threadexceptions.h
+/usr/local/include/iri/iriutils/log.h
+/usr/local/include/iri/iriutils/logexceptions.h
+/usr/local/include/iri/iriutils/ctime.h
+/usr/local/include/iri/iriutils/ctimeexceptions.h
+/usr/share/cmake-3.16/Modules/Findiriutils.cmake
