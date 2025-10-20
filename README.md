@@ -1,10 +1,11 @@
 ### Public_IRI_laser_leg_people_detection_nodes
 These algoriths were created at IRI for the TFC of Fernando Herrero Cotarelo. The migred version for ROS2 humble is created by Ely Repiso. It is included here because is used in the Adaptive Social Planner to acompani people and includes licences and recognition from the initial people, institutions and repositories.
+The code is under the licence CC BY-NC-ND 4.0 License from the UPC commons documents.
 
 ## Laser People Detection
 # Author recognition and citation:
 
-This paper was created at the IRI institution, website: https://www.iri.upc.edu/
+This code was created at the IRI institution, website: https://www.iri.upc.edu/
 It was authored by Fernando Herrero and published as TFC in UPC, with name: Detección automática de personas mediante láser 2D y su aplicación a la robótica de servicios
 link: https://upcommons.upc.edu/entities/publication/a048cb04-9d46-4742-8cfa-bd6bbebbf44a
 Notice: Sorry, this is only in spanish.
