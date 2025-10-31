@@ -67,7 +67,7 @@ This package can be installed by cloning the repository inside an active ROS wor
 ```
 roscd
 cd ../src
-git clone https://gitlab.iri.upc.edu/labrobotica/ros/perception/iri_laser_people_detection.git 
+git clone https://github.com/elyRP/Public_IRI_laser_leg_people_detection_nodes/
 ```
 
 However, this package is normally used as part of a wider installation (i.e. a 
