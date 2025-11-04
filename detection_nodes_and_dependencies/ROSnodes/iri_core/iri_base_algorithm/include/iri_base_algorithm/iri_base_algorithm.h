@@ -19,18 +19,18 @@
 #ifndef _IRI_BASE_ALGORITHM_H
 #define _IRI_BASE_ALGORITHM_H
 
-#include <ros/ros.h>
+#include <rclcpp/rclcpp.hpp> // old noetic: #include <ros/ros.h>
 #include <signal.h>
 
 // boost thread includes for ROS::spin thread
-#include <boost/thread.hpp>
-#include <boost/bind.hpp>
+#include <thread>  //old ros noetic: #include <boost/thread.hpp>
+#include <functional> // old ros noetic: #include <boost/bind.hpp>
 
 // dynamic reconfigure server include
-#include <dynamic_reconfigure/server.h>
+//#include <dynamic_reconfigure/server.h> // se mantiene igual.
 
 // diagnostic updater include
-#include <diagnostic_updater/diagnostic_updater.h>
+#include <diagnostic_updater/diagnostic_updater.hpp> // old noetic: #include <diagnostic_updater/diagnostic_updater.h>
 
 namespace algorithm_base
 {
@@ -60,7 +60,7 @@ namespace algorithm_base
  * mainNodeThread() function defined in the inherit node class is called.
  */
 template <class Algorithm>
-class IriBaseAlgorithm
+class IriBaseAlgorithm : public rclcpp::Node
 {
   public:
    /**
@@ -70,7 +70,7 @@ class IriBaseAlgorithm
     * dynamic reconfigure. This config class will contain all algorithm 
     * parameters which may be modified once the algorithm node is launched.
     */
-    typedef typename Algorithm::Config Config;
+    //typedef typename Algorithm::Config Config; // se mantiene igual, de momento.
 
   protected:
     /**
@@ -81,7 +81,7 @@ class IriBaseAlgorithm
      * be modified at any time and it is not accessible from outside the class.
      *
      */
-    pthread_t thread;
+    std::thread main_thread_; // old noetic: pthread_t thread;
 
    /**
     * \brief template algorithm class
@@ -90,7 +90,7 @@ class IriBaseAlgorithm
     * interface. Will be used in the derivate class to define the common 
     * behaviour for all the different implementations from the same algorithm.
     */
-    Algorithm alg_;
+    Algorithm alg_;  // se mantiene igual de momento.
 
    /**
     * \brief public node handle communication object
@@ -99,7 +99,7 @@ class IriBaseAlgorithm
     * the node namespace. Additional node handles can be instantatied if 
     * additional namespaces are needed.
     */
-    ros::NodeHandle public_node_handle_;
+    rclcpp::Node::SharedPtr public_node_handle_;// old ros onetic: ros::NodeHandle public_node_handle_;
 
    /**
     * \brief private node handle object
@@ -108,7 +108,7 @@ class IriBaseAlgorithm
     * the ROS parametre server. For communication pruposes please use the 
     * previously defined node_handle_ object.
     */
-    ros::NodeHandle private_node_handle_;
+    rclcpp::Node::SharedPtr private_node_handle_; // old noetic: ros::NodeHandle private_node_handle_;
 
    /**
     * \brief default main thread frequency
@@ -116,7 +116,7 @@ class IriBaseAlgorithm
     * This constant determines the default frequency of the mainThread() in HZ.
     * All nodes will loop at this rate if loop_rate_ variable is not modified.
     */
-    static const unsigned int DEFAULT_RATE = 10; //[Hz]
+    static constexpr unsigned int DEFAULT_RATE = 10; //[Hz]//old noetic: static const unsigned int DEFAULT_RATE = 10; //[Hz]
     
    /**
     * \brief diagnostic updater
@@ -124,7 +124,7 @@ class IriBaseAlgorithm
     * The diagnostic updater allows definition of custom diagnostics. 
     * 
     */
-    diagnostic_updater::Updater diagnostic_;
+    diagnostic_updater::Updater diagnostic_; // se mantiene igual de momento.
 
   public:
    /**
@@ -134,15 +134,35 @@ class IriBaseAlgorithm
     * loop_rate_ and the diagnostic updater. It also instantiates the main 
     * thread of the class and the dynamic reconfigure callback.
     */
-    IriBaseAlgorithm(const ros::NodeHandle &nh = ros::NodeHandle("~"));
+    // old noetic: IriBaseAlgorithm(const ros::NodeHandle &nh = ros::NodeHandle("~"));
+    IriBaseAlgorithm(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
+    /* otra traduccion posible en ros 2: 
+    IriBaseAlgorithm(const std::string &node_name) :
+      Node(node_name),
+      loop_rate_(DEFAULT_RATE),
+      diagnostic_(this)
+    {
+      RCLCPP_DEBUG(this->get_logger(), "IriBaseAlgorithm::Constructor");
+
+      // set the diagnostic updater period
+      this->declare_parameter("diagnostic_period", 0.1);
+    }*/
 
    /**
     * \brief destructor
     * 
     * This destructor kills the main thread.
     */
-    ~IriBaseAlgorithm(void);
-
+    // old ros noetic: ~IriBaseAlgorithm(void);
+    ~IriBaseAlgorithm();
+    /*{
+      RCLCPP_DEBUG(this->get_logger(), "IriBaseAlgorithm::Destructor");
+      if (main_thread_.joinable())
+      {
+        main_thread_.join();
+      }
+    }*/
+    
    /**
     * \brief spin
     * 
@@ -150,9 +170,33 @@ class IriBaseAlgorithm
     * launches de main thread. Once the object is instantiated, it will not 
     * start iterating until this method is called.
     */
-    int spin(void);
+    // old noetic: 
+    int spin(void); // se quera igual, de momento.
+    /*otra traduccion posible en ros2
+        int spin(void)
+    {
+      RCLCPP_DEBUG(this->get_logger(), "IriBaseAlgorithm::spin");
 
-    int nodelet_spin(void);
+      // initialize diagnostics
+      this->diagnostic_.setHardwareID("none");
+      this->addDiagnostics();
+
+      // create the status thread
+      main_thread_ = std::thread(&IriBaseAlgorithm<Algorithm>::mainThread, this);
+
+      rclcpp::Rate rate(loop_rate_);
+      while (rclcpp::ok())
+      {
+        rclcpp::spin_some(this->get_node_base_interface());
+        this->diagnostic_.force_update();
+        rate.sleep();
+      }
+
+      return 0;
+    }*/
+    
+
+    int nodelet_spin(void); // TODO: no equivalencia, de momento.
 
   private:
    /**
@@ -161,7 +205,7 @@ class IriBaseAlgorithm
     * This boost thread object will manage the ros::spin function. It is 
     * instantiated and launched in the spin class method.
     */
-    boost::shared_ptr<boost::thread> ros_thread_;
+    std::shared_ptr<std::thread> ros_thread_; //boost::shared_ptr<boost::thread> ros_thread_; // old ros noetic
 
    /**
     * \brief dynamic reconfigure server
@@ -169,7 +213,7 @@ class IriBaseAlgorithm
     * The dynamic reconfigure server is in charge to retrieve the parameters
     * defined in the config cfg file through the reconfigureCallback.
     */
-    dynamic_reconfigure::Server<Config> dsrv_;
+    //dynamic_reconfigure::Server<Config> dsrv_; // se queda igual de momento. dynamic reconfigure no es equivalente en ros2
 
    /**
     * \brief main thread loop rate
@@ -179,7 +223,7 @@ class IriBaseAlgorithm
     * may be modified in the node implementation constructor if a desired
     * frequency is required.
     */
-    ros::Rate loop_rate_;
+     rclcpp::Rate loop_rate_;// old noetic: ros::Rate loop_rate_;
 
   protected:
 
@@ -187,14 +231,14 @@ class IriBaseAlgorithm
     * \brief 
     * 
     */
-    void setRate(double rate_hz);
+    void setRate(double rate_hz); //igual de momento.
 
 
     /**
     * \brief 
     * 
     */
-    double getRate(void);
+    double getRate(void); //igual de momento.
 
    /**
     * \brief dynamic reconfigure server callback
@@ -208,7 +252,7 @@ class IriBaseAlgorithm
     * \param level  integer referring the level in which the configuration
     *               has been changed.
     */
-    void reconfigureCallback(Config &config, uint32_t level);
+    //void reconfigureCallback(Config &config, uint32_t level); //igual de momento.
 
    /**
     * \brief dynamic reconfigure server callback
@@ -222,7 +266,7 @@ class IriBaseAlgorithm
     * \param level  integer referring the level in which the configuration
     *               has been changed.
     */
-    virtual void node_config_update(Config &config, uint32_t level) = 0;
+    //virtual void node_config_update(Config &config, uint32_t level) = 0; //igual de momento.
    
    /**
     * \brief add diagnostics
@@ -230,7 +274,7 @@ class IriBaseAlgorithm
     * In this function ROS diagnostics applied to all algorithms nodes may be
     * added. It calls the addNodeDiagnostics method.
     */
-    void addDiagnostics(void);
+    void addDiagnostics(void); //igual de momento.
 
    /**
     * \brief node add diagnostics
@@ -238,7 +282,7 @@ class IriBaseAlgorithm
     * In this abstract function additional ROS diagnostics applied to the 
     * specific algorithms may be added.
     */
-    virtual void addNodeDiagnostics(void) = 0;
+    virtual void addNodeDiagnostics(void) = 0; //igual de momento.
 
    /**
     * \brief main node thread
@@ -253,7 +297,7 @@ class IriBaseAlgorithm
     * \param param is a pointer to a IriBaseAlgorithm object class. It is used
     *              to access to the object attributes and methods.
     */
-    static void *mainThread(void *param);
+   void *mainThread(void *param); // igual de momento.
 
    /**
     * \brief specific node thread
@@ -261,64 +305,118 @@ class IriBaseAlgorithm
     * In this abstract function specific commands for each algorithm node
     * have to be detailed.
     */
-    virtual void mainNodeThread(void) = 0;
+    virtual void mainNodeThread(void) = 0; //igual de momento.
 
-    static void hupCalled(int sig);
+    static void hupCalled(int sig); // igual de momento.
 };
 
-
-template <class Algorithm>
+/* old noetic:template <class Algorithm>
 IriBaseAlgorithm<Algorithm>::IriBaseAlgorithm(const ros::NodeHandle &nh) : 
   public_node_handle_(nh),
   private_node_handle_("~"), 
   loop_rate_(DEFAULT_RATE),
   diagnostic_(),
   dsrv_(public_node_handle_)
+ {*/
+template <class Algorithm>
+IriBaseAlgorithm<Algorithm>::IriBaseAlgorithm(const rclcpp::NodeOptions & options) :
+  rclcpp::Node("iri_base_algorithm", options),
+  public_node_handle_(this->shared_from_this()),
+  private_node_handle_(this->shared_from_this()),
+  loop_rate_(DEFAULT_RATE),
+  diagnostic_(this)
 {
-  ROS_DEBUG("IriBaseAlgorithm::Constructor");
+  RCLCPP_DEBUG(this->get_logger(), "IriBaseAlgorithm::Constructor");// old noeticROS_DEBUG("IriBaseAlgorithm::Constructor");
 
   // allow Ctrl+C management
-  signal(SIGHUP, &IriBaseAlgorithm<Algorithm>::hupCalled);
+  signal(SIGHUP, &IriBaseAlgorithm<Algorithm>::hupCalled); // de momento igual.
 
   // set the diagnostic updater period
-  this->private_node_handle_.setParam("diagnostic_period",0.1);
+  this->declare_parameter("diagnostic_period", 0.1);// old noetic: this->private_node_handle_.setParam("diagnostic_period",0.1);
 }
 
+
+
+template <class Algorithm>
+IriBaseAlgorithm<Algorithm>::~IriBaseAlgorithm()
+{
+  RCLCPP_DEBUG(this->get_logger(), "IriBaseAlgorithm::Destructor");
+  if (main_thread_.joinable())
+  {
+    main_thread_.join();
+  }
+}
+
+/*old noetic:
 template <class Algorithm>
 IriBaseAlgorithm<Algorithm>::~IriBaseAlgorithm()
 {
   ROS_DEBUG("IriBaseAlgorithm::Destructor");
   pthread_cancel(this->thread);
   pthread_join(this->thread,NULL);
-}
+}*/
 
+/* old noetic:
 template <class Algorithm>
 void IriBaseAlgorithm<Algorithm>::setRate(double rate_hz)
 {
   this->loop_rate_=ros::Rate(rate_hz);
+}*/
+template <class Algorithm>
+void IriBaseAlgorithm<Algorithm>::setRate(double rate_hz)
+{
+  //this->loop_rate_ = rclcpp::Rate(rate_hz);
+  rclcpp::Rate loop_rate_{rate_hz};
 }
 
+/*old noetic:
 template <class Algorithm>
 double IriBaseAlgorithm<Algorithm>::getRate(void)
 {
   return 1.0/this->loop_rate_.expectedCycleTime().toSec();
+}*/
+
+template <class Algorithm>
+double IriBaseAlgorithm<Algorithm>::getRate(void)
+{
+   auto period = this->loop_rate_.period();
+   return period.count() * 1e-9;;
+  //old noetic: return 1.0 / this->loop_rate_.cycle_time().count();
 }
 
+/*old noetic:
 template <class Algorithm>
 void IriBaseAlgorithm<Algorithm>::reconfigureCallback(Config &config, uint32_t level)
 {
   ROS_DEBUG("IriBaseAlgorithm::reconfigureCallback");
   this->node_config_update(config, level);
   this->alg_.config_update(config, level);
-}
+}*/
 
+//template <class Algorithm>
+/*void IriBaseAlgorithm<Algorithm>::reconfigureCallback(Config &config, uint32_t level)
+{
+  RCLCPP_DEBUG(this->get_logger(), "IriBaseAlgorithm::reconfigureCallback");
+  this->node_config_update(config, level);
+  this->alg_.config_update(config, level);
+}*/
+
+/*old noetic:
 template <class Algorithm>
 void IriBaseAlgorithm<Algorithm>::addDiagnostics(void)
 {
   ROS_DEBUG("IriBaseAlgorithm::addDiagnostics");
   addNodeDiagnostics();
+}*/
+
+template <class Algorithm>
+void IriBaseAlgorithm<Algorithm>::addDiagnostics(void)
+{
+  RCLCPP_DEBUG(this->get_logger(), "IriBaseAlgorithm::addDiagnostics");
+  addNodeDiagnostics();
 }
 
+/*old noetic:
 template <class Algorithm>
 void *IriBaseAlgorithm<Algorithm>::mainThread(void *param)
 {
@@ -338,46 +436,71 @@ void *IriBaseAlgorithm<Algorithm>::mainThread(void *param)
 
   // kill main thread
   pthread_exit(NULL);
+}*/
+template <class Algorithm>
+void *IriBaseAlgorithm<Algorithm>::mainThread(void *param)
+{
+  RCLCPP_DEBUG(this->get_logger(), "IriBaseAlgorithm::mainThread");
+
+  while(rclcpp::ok())
+  {
+    this->mainNodeThread();
+    this->loop_rate_.sleep();
+  }
 }
 
 template <class Algorithm>
 void IriBaseAlgorithm<Algorithm>::hupCalled(int sig)
 {
-  ROS_WARN("Unexpected SIGHUP caught. Ignoring it.");
+  RCLCPP_WARN(rclcpp::get_logger("rclcpp"), "Unexpected SIGHUP caught. Ignoring it.");// old noetic:ROS_WARN("Unexpected SIGHUP caught. Ignoring it.");
 }
 
 template <class Algorithm>
 int IriBaseAlgorithm<Algorithm>::spin(void)
 {
-  ROS_DEBUG("IriBaseAlgorithm::spin");
+  RCLCPP_DEBUG(this->get_logger(), "IriBaseAlgorithm::spin");// old noetic: ROS_DEBUG("IriBaseAlgorithm::spin");
 
   // initialize diagnostics
   this->diagnostic_.setHardwareID("none");
   this->addDiagnostics();
   
   // launch ros spin in different thread
-  this->ros_thread_.reset( new boost::thread(boost::bind(&ros::spin)) );
-  assert(ros_thread_);
+  this->ros_thread_ = std::make_unique<std::thread>(&IriBaseAlgorithm::spin, this);
+  // this->ros_thread_ = std::make_unique<std::thread>(&rclcpp::spin);// old noetic: this->ros_thread_.reset( new boost::thread(boost::bind(&ros::spin)) );
+  assert(ros_thread_ && ros_thread_->joinable());// old noetic:assert(ros_thread_);
 
   // assign callback to dynamic reconfigure server
-  this->dsrv_.setCallback(boost::bind(&IriBaseAlgorithm<Algorithm>::reconfigureCallback, this, _1, _2));
+  //this->dsrv_.setCallback(boost::bind(&IriBaseAlgorithm<Algorithm>::reconfigureCallback, this, _1, _2)); //igual, no hay queivalente.
 
   // create the status thread
-  pthread_create(&this->thread,NULL,this->mainThread,this);
-
+  //this->thread = std::thread(&IriBaseAlgorithm::mainThread, this);
+   // otra traduccion a ros2 humble: this->thread=std::make_unique<std::thread>(this->mainThread, this);// old noetic: pthread_create(&this->thread,NULL,this->mainThread,this);
+  
+  
+  /* old noetic:
   while(ros::ok())
   {
     // update diagnostics
     this->diagnostic_.update();
     
     ros::WallDuration(this->diagnostic_.getPeriod()).sleep();
+  }*/
+  while(rclcpp::ok())
+  {
+    this->diagnostic_.force_update();
+    
+    rclcpp::sleep_for(this->diagnostic_.getPeriod().to_chrono<std::chrono::nanoseconds>()); 
   }
 
   // stop ros
-  ros::shutdown();
+  rclcpp::shutdown();// old noetic: ros::shutdown();
 
   // kill ros spin thread
-  this->ros_thread_.reset();
+  // old noetic: this->ros_thread_.reset();
+  if (main_thread_.joinable())
+  {
+    main_thread_.join();
+  }
 
   return 0;
 }
@@ -385,28 +508,41 @@ int IriBaseAlgorithm<Algorithm>::spin(void)
 template <class Algorithm>
 int IriBaseAlgorithm<Algorithm>::nodelet_spin(void)
 {
-  ROS_DEBUG("IriBaseAlgorithm::spin");
+  RCLCPP_DEBUG(this->get_logger(), "IriBaseAlgorithm::spin"); // old ros noetic: ROS_DEBUG("IriBaseAlgorithm::spin");
 
   // initialize diagnostics
-  this->diagnostic_.setHardwareID("none");
+  this->diagnostic_.setHardwareID("none"); //remain the same
   this->addDiagnostics();
   
   // assign callback to dynamic reconfigure server
-  this->dsrv_.setCallback(boost::bind(&IriBaseAlgorithm<Algorithm>::reconfigureCallback, this, _1, _2));
+  //this->dsrv_.setCallback(boost::bind(&IriBaseAlgorithm<Algorithm>::reconfigureCallback, this, _1, _2)); //seems remain the same
 
   // create the status thread
-  pthread_create(&this->thread,NULL,this->mainThread,this);
+  this->thread_ = std::thread(&IriBaseAlgorithm::mainThread, this);// old noetic: pthread_create(&this->thread,NULL,this->mainThread,this);
 
-  while(ros::ok())
+  /*old noetic:
+   while(ros::ok())
   {
     // update diagnostics
     this->diagnostic_.update();
     
     ros::WallDuration(this->diagnostic_.getPeriod()).sleep();
+  }*/
+  while(rclcpp::ok())
+  {
+    this->diagnostic_.force_update();
+    rclcpp::sleep_for(this->diagnostic_.getPeriod().to_chrono<std::chrono::nanoseconds>());//rclcpp::sleep_for(std::chrono::duration_cast<std::chrono::nanoseconds>(this->diagnostic_.getPeriod()));
   }
 
   // stop ros
-  ros::shutdown();
+  rclcpp::shutdown(); // old noetic: ros::shutdown();
+  
+  /* ros2 tambien sugeria esto, pero aqui el codigo original no reinicia el thread:
+ if (main_thread_.joinable())
+  {
+    main_thread_.join();
+  }
+  */
 
   return 0;
 }
@@ -428,17 +564,20 @@ int IriBaseAlgorithm<Algorithm>::nodelet_spin(void)
  * \param node_name name of the node
  */
 template <class AlgImplTempl>
-int main(int argc, char **argv, std::string node_name)
+int main(int argc, char **argv, std::string node_name) // ros 2 me lo sugiere cambiado, pero creo que no: int main(int argc, char **argv, const std::string & node_name)
 {
-  ROS_DEBUG("IriBaseAlgorithm::%s Launched", node_name.c_str());
+   
+  RCLCPP_DEBUG(rclcpp::get_logger("rclcpp"), "IriBaseAlgorithm::%s Launched", node_name.c_str());
+  // old noetic: ROS_DEBUG("IriBaseAlgorithm::%s Launched", node_name.c_str());
 
   // ROS initialization
-  ros::init(argc, argv, node_name);
+  rclcpp::init(argc, argv);// old noetic: ros::init(argc, argv, node_name);
 
   // define and launch generic algorithm implementation object
-  AlgImplTempl algImpl;
-  algImpl.spin();
+  auto algImpl = std::make_shared<AlgImplTempl>(); // old noetic: AlgImplTempl algImpl;
+  algImpl->spin(); // old noetic: algImpl.spin();
 
+   // ros 2 sugiere esto, pero creo que no, al no tenerlo el codigo original: rclcpp::shutdown();
   return 0;
 }
 

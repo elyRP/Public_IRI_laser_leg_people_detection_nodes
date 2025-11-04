@@ -1,26 +1,28 @@
 <?xml version="1.0"?>
-<package format="2">
+<package format="3">
   <name>iri_base_algorithm</name>
   <version>1.0.0</version>
-  <description>The iri_base_algorithm package</description>
+  <description>Package for base algorithm of IRI robot.</description>
 
   <maintainer email="labrobotica@iri.upc.edu">labrobotica</maintainer>
 
   <license>LGPL</license>
 
-  <url type="website">http://wiki.ros.org/iri_base_algorithm</url>
+  <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <author>Joan Perez</author>
-
-  <buildtool_depend>catkin</buildtool_depend>
-  <depend>roscpp</depend>
-  <depend>dynamic_reconfigure</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_components</depend>
   <depend>diagnostic_updater</depend>
+   <!-- <depend>dynamic_reconfigure</depend>-->
+  <depend>boost</depend>
 
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
 
-  <!-- The export tag contains other, unspecified, tags -->
+  <member_of_group>rosidl_interface_packages</member_of_group>
+
   <export>
-    <!-- Other tools can request additional information be placed here -->
-
+    <build_type>ament_cmake</build_type>
   </export>
 </package>
+
