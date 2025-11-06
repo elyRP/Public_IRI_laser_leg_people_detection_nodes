@@ -1,0 +1,6 @@
+# create an example application
+ADD_EXECUTABLE(laser_people_detection_test laser_people_detection_test.cpp)
+ADD_EXECUTABLE(laser_people_label_assembler_test laser_people_label_assembler_test.cpp)
+
+# link necessary libraries
+TARGET_LINK_LIBRARIES(laser_people_detection_test laser_people_detection)

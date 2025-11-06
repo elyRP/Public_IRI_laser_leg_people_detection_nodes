@@ -1,0 +1,26 @@
+---
+iri_laser_people_detection:
+  ros__parameters:
+    rangeThreshold: 0.0
+    detectionThreshold: -0.001
+    boostFilePath: '/usr/local/include/iri/lpd/boostData/boostFile.txt'
+    boostFilePath2: '/usr/local/include/iri/lpd/boostData/boostFile2.txt'
+    selectPosesFrame: false
+    posesFrame: "/base_link"
+    selectScanFrame: false
+    scanFrame: "/scan"
+    markerWidth: 0.7
+    markerHeight: 0.4
+    markerR: 1.0
+    markerG: 0.0
+    markerB: 0.5
+    markerA: 0.5
+    filterPosesMode: false
+    filterR: 0.0
+    filterXmin: 0.0
+    filterXmax: 0.0
+    filterYmin: 0.0
+    filterYmax: 0.0
+    personRadius: 0.7
+    jumpDistance: 0.1
+    minPoints: 3

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+  <arg name="ns"                 default="tibi" />
+  <arg name="node_name"          default="lpmf" />
+  <arg name="config_file"        default="$(find iri_laser_people_map_filter)/config/params.yaml" />
+  <arg name="output"             default="screen" />
+  <arg name="launch_prefix"      default="" />
+
+  <arg name="map_topic"     default="/$(arg ns)/map"/>
+  <arg name="people_topic"  default="/$(arg ns)/lpd/people"/>
+  <arg name="people_out_topic" default="/$(arg ns)/$(arg node_name)/people_filtered"/>
+  <arg name="markers_topic"    default="/$(arg ns)/$(arg node_name)/markers"/>
+
+  <param name="use_sim_time" value="true"/>
+
+  <node pkg="rosbag"
+        type="play"
+        name="rosbag"
+        args="-l -q --clock $(find iri_laser_people_detection)/data/bagFile.bag"
+        output="screen">
+  </node>
+
+  <include file="$(find iri_laser_people_detection)/launch/node.launch">
+    <arg name="ns"            value="$(arg ns)" />
+    <arg name="node_name"     value="lpd" />
+    <arg name="config_file"   value="$(find iri_laser_people_detection)/config/params.yaml" />
+    <arg name="output"        value="$(arg output)" />
+    <arg name="launch_prefix" value="$(arg launch_prefix)" />
+    <arg name="scan_topic"    value="/$(arg ns)/sensors/front_laser_scan"/>
+    <arg name="people_topic"  value="/$(arg ns)/lpd/people"/>
+  </include>
+  
+  <include file="$(find iri_laser_people_map_filter)/launch/node.launch">
+    <arg name="ns"            value="$(arg ns)" />
+    <arg name="node_name"     value="$(arg node_name)" />
+    <arg name="config_file"   value="$(arg config_file)" />
+    <arg name="output"        value="$(arg output)" />
+    <arg name="launch_prefix" value="$(arg launch_prefix)" />
+    <arg name="map_topic"        value="$(arg map_topic)"/>
+    <arg name="people_topic"     value="$(arg people_topic)"/>
+    <arg name="people_out_topic" value="$(arg people_out_topic)"/>
+    <arg name="markers_topic"    value="$(arg markers_topic)"/>
+  </include>
+  
+  <node name="map_server" 
+        pkg ="map_server" 
+        type="map_server"
+        args="$(find iri_laser_people_map_filter)/data/map.yaml"
+        output="screen">
+    <param name="frame_id" value="/map"/>
+    <remap from="/map"     to="$(arg ns)/map"/>
+  </node>
+  
+  <node name="tf" 
+        pkg ="tf" 
+        type="static_transform_publisher"
+        args="0 0 0 0 0 0 /map $(arg ns)/base_link 100"
+        output="screen">
+  </node>
+
+  <node name="rviz"
+        pkg ="rviz"
+        type="rviz"
+        args="-d $(find iri_laser_people_map_filter)/rviz/$(arg ns)_bag.rviz">
+    </node>
+
+  <node name="reconfigure_gui"
+        pkg ="rqt_reconfigure"
+        type="rqt_reconfigure"
+        args="$(arg ns)/$(arg node_name)">
+  </node>
+
+</launch>

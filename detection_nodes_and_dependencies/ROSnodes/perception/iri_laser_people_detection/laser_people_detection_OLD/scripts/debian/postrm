@@ -1,0 +1,21 @@
+#!/bin/bash
+set -e
+case "$1" in
+  remove)
+    #echo "I'm a postrm script"
+  ;;
+  purge)
+   ;;
+  upgrade)
+   ;;
+  disappear)
+   ;;
+  failed-upgrade)
+   ;;
+  abort-install)
+   ;;
+  abort-upgrade)
+   ;;
+esac
+exit 0
+

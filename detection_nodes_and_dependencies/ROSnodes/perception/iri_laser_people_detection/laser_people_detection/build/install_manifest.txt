@@ -1,0 +1,10 @@
+/usr/local/lib/iri/laser_people_detection/liblaser_people_detection.so
+/usr/local/include/iri/laser_people_detection/laserPeopleCommon.h
+/usr/local/include/iri/laser_people_detection/laserPeopleDetection.h
+/usr/local/include/iri/laser_people_detection/laserPeopleLabel.h
+/usr/local/include/iri/laser_people_detection/BoostedCommittee.h
+/usr/local/include/iri/laser_people_detection/SPHypothesis.h
+/usr/local/include/iri/laser_people_detection/IWeakHypothesis.h
+/usr/local/include/lpd/boostData/boostFile.txt
+/usr/local/include/lpd/boostData/boostFile2.txt
+/usr/share/cmake-3.22/Modules/Findlaser_people_detection.cmake

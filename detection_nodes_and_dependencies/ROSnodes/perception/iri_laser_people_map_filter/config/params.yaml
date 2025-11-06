@@ -1,0 +1,9 @@
+filter: true
+neighborRadius: 0.3
+markerWidth: 0.7
+markerHeight: 1.5
+markerR: 1.0
+markerG: 1.0
+markerB: 0.0
+markerA: 0.9
+markerLifeTime: 0.1
