@@ -1,0 +1,18 @@
+rangeThreshold:      0.0
+detectionThreshold: -0.05
+boostFilePath:       "/usr/local/include/iri/laser_people_detection/boostData/boostFile.txt"
+boostFilePath2:      "/usr/local/include/iri/laser_people_detection/boostData/boostFile2.txt"
+selectPosesFrame:    True
+posesFrame:          "map"
+selectScanFrame:     False
+scanFrame:           ""
+markerWidth     : 0.7
+markerHeight    : 0.5
+markerR         : 1.0
+markerG         : 0.0
+markerB         : 0.0
+markerA         : 0.5
+filterPosesMode : False
+filterR         : 0.0
+filterX         : 0.0
+filterY         : 0.0
