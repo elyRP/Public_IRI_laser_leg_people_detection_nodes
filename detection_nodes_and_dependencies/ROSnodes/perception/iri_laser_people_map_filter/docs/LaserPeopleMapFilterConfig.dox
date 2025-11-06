@@ -1,0 +1,12 @@
+\subsubsection parameters ROS parameters
+
+Reads and maintains the following parameters on the ROS server
+
+- \b "~neighborRadius" : \b [double] Threshold distance in meters where to filter people detections  min: 0.0, default: 0.25, max: 3.0
+- \b "~markerWidth" : \b [double] Dimension of detected people markers min: 0.0, default: 0.7, max: 1.0
+- \b "~markerHeight" : \b [double] Dimension of detected people markers min: 0.0, default: 1.0, max: 2.0
+- \b "~markerR" : \b [double] marker R color component min: 0.0, default: 1.0, max: 1.0
+- \b "~markerG" : \b [double] marker G color component min: 0.0, default: 0.0, max: 1.0
+- \b "~markerB" : \b [double] marker B color component min: 0.0, default: 0.0, max: 1.0
+- \b "~markerA" : \b [double] marker ALPHA color component min: 0.0, default: 0.75, max: 1.0
+

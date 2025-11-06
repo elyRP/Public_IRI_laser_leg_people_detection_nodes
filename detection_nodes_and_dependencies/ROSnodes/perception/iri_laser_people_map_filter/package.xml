@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>iri_laser_people_map_filter</name>
+  <version>1.0.0</version>
+  <description>
+    Filters out people detections that are close to map obstacles (by neighbor distance threshold). Subscribes to people detection array and map occupancy grid, and publishes filtered people detection array.
+  </description>
+
+  <maintainer email="labrobotica@iri.upc.edu">IRI_labrobotica</maintainer>
+
+  <license>LGPL</license>
+
+  <author email="fherrero@iri.upc.edu">Fernando Herrero</author>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <build_depend>rclcpp</build_depend>
+  <build_depend>iri_base_algorithm</build_depend>
+  <build_depend>iri_perception_msgs</build_depend>
+  <!--<build_depend>iriutils</build_depend>-->
+  <build_depend>nav_msgs</build_depend>
+  <build_depend>visualization_msgs</build_depend>
+  <build_depend>tf2</build_depend>
+  <build_depend>tf2_ros</build_depend>
+  <build_depend>tf2_geometry_msgs</build_depend>
+  <!--<depend>diagnostic_msgs</depend>-->
+
+  <exec_depend>rclcpp</exec_depend>
+  <exec_depend>iri_base_algorithm</exec_depend>
+  <exec_depend>iri_perception_msgs</exec_depend>
+  <!--<exec_depend>iriutils</exec_depend>-->
+  <exec_depend>nav_msgs</exec_depend>
+  <exec_depend>visualization_msgs</exec_depend>
+  <exec_depend>tf2</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
+  <exec_depend>tf2_geometry_msgs</exec_depend>
+  <exec_depend>iri_laser_people_detection</exec_depend>
+  <exec_depend>map_server</exec_depend>
+
+  <export>
+    <!-- Other tools can request additional information be placed here -->
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

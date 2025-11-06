@@ -1,0 +1,13 @@
+\subsubsection usage Usage
+\verbatim
+<node name="LaserPeopleMapFilterAlgorithm" pkg="iri_laser_people_map_filter" type="LaserPeopleMapFilterAlgorithm">
+  <param name="neighborRadius" type="double" value="0.25" />
+  <param name="markerWidth" type="double" value="0.7" />
+  <param name="markerHeight" type="double" value="1.0" />
+  <param name="markerR" type="double" value="1.0" />
+  <param name="markerG" type="double" value="0.0" />
+  <param name="markerB" type="double" value="0.0" />
+  <param name="markerA" type="double" value="0.75" />
+</node>
+\endverbatim
+

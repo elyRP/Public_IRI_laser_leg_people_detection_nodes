@@ -1,0 +1,6 @@
+#request
+iri_perception_msgs/RestartSim init
+---
+#response
+bool success
+
